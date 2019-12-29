@@ -1,4 +1,4 @@
-# Python version  - 2.7.13
+# Python version  - 3.7+
 # SMTP Gmail Client
 # Made by Bryce Golamco
 
@@ -23,23 +23,17 @@ emailbody = ''
 
 emailhelp = """
 Type in these codes to change the data to be sent.
-
 !read               - prints out all the email info
 !send               - sends the message
 !back               - goes back to the main command line
-
 !changeweb          - changes to a common website that has smtp support
-
 !portnumber         - changes the server port
 !servername         - changes the server name
-
 !clientad           - changes the client's email address
 !clientpass         - changes the client's email password
-
 !emailad            - changes the email address destination
 !emailsubject       - changes the email subject
 !emailbody          - changes the email body
-
 !help               - displays the instructions.
 """
 def listandset():   # lists out all available website in the code
@@ -51,7 +45,7 @@ def listandset():   # lists out all available website in the code
     print('yahoomail')
     print('outlook')
 
-    reply = raw_input()
+    reply = input()
 
     if (reply == 'gmail'):
         serverport = 587
@@ -73,9 +67,11 @@ def send(): #Sends the message
         conn.ehlo()
         conn.starttls()
         conn.login(clientemail,clientpassword)
-        conn.sendmail(clientemail,destinationemail,'Subject:' + emailsubject + '\n\n' + emailbody)
-        conn.quit()
-        print('Success')
+        for i in destinationemail:
+            conn.sendmail(clientemail,destinationemail,'Subject:' + emailsubject + '\n\n' + emailbody)
+            
+            print('Success')
+        
     except smtplib.SMTPServerDisconnected:
         print('Server disconnected unexpectedly')
     except smtplib.SMTPSenderRefused:
@@ -100,7 +96,7 @@ def send(): #Sends the message
 print('Type !help to start.')
 while True:
     print('Currently in main command line')
-    reply = raw_input()
+    reply = input()
 
     if(reply == '!read'):               # Prints out all the info of the message to be sent except for the password
         print('\n')
@@ -119,42 +115,38 @@ while True:
         listandset()
     elif (reply == '!portnumber'):      # Changes the port number of the server to send (defaulted at 587)
         print('Write the port number of the website:')
-        reply = raw_input()
+        reply = input()
         if (reply != '!back'):
             serverport = int(reply)
     elif (reply == '!servername'):      # Changes the servername (defaulted at smtp.gmail.com)
         print('Write the servername of the website:')
-        reply = raw_input()
+        reply = input()
         if (reply != '!back'):
             servername = str(reply)
     elif (reply == '!clientad'):         # Changes the Client's email address
         print('Write the email address of the client:')
-        reply = raw_input()
+        reply = input()
         if (reply != '!back'):
             clientemail = reply
     elif (reply == '!clientpass'):       # Changes the Client's password
         print('Write the password of the client:')
-        reply = raw_input()
+        reply = input()
         if (reply != '!back'):
             clientpassword = reply
     elif (reply == '!emailad'):         # Changes destination email address
-        print('Write the destination email address:')
-        reply = raw_input()
+        print('Write the destination email file address:')
+        reply = input()
         if (reply != '!back'):
-            destinationemail = reply
+            destinationemail = [i for i in open(reply, 'r')]
     elif (reply == '!emailsubject'):     # Changes the email's subject
         print('Write the Subject of the email:')
-        reply = raw_input()
+        reply = input()
         if (reply != '!back'):
             emailsubject = reply
     elif (reply == '!emailbody'):        # Changes the email body of the email
         print('Write the body of the email:')
-        reply = raw_input()
+        reply = input()
         if(reply != '!back'):
             emailbody = reply
     else:
         print(emailhelp)
-
-
-
-
